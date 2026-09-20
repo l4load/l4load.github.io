@@ -20,24 +20,3 @@ jobs:
           git -C /tmp/source checkout --quiet "$sha"
           python3 /tmp/source/scripts/build_site.py
           cmp index.html /tmp/source/site/index.html
-      - name: Prepare site
-        run: |
-          mkdir public
-          cp index.html source.txt .nojekyll public/
-      - uses: actions/upload-pages-artifact@v3
-        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-        with:
-          path: public
-  deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    needs: verify
-    runs-on: ubuntu-24.04
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/deploy-pages@v4
-        id: deployment
