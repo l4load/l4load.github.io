@@ -39,6 +39,9 @@ returned to both backends after recovery, preserving client IP and payload.</p>
 <p><a href="https://github.com/l4load/l4load/tree/main/lab/ipvs">Run the lifecycle trial ↗</a> ·
 <a href="https://github.com/l4load/l4load/actions/runs/36132397199/job/108062445520">Verified execution ↗</a></p>
 <p>Two established TCP sessions survived health exclusion, reload and a gated controller restart. Direct restart with retained state failed; the tested workaround pauses new flows until health is confirmed. Sustained load, abrupt failure and HA remain unqualified.</p>
+<p>A separate IPv6-over-IPv6 IPVS trial passed 192 TCP/UDP exchanges across
+health-port failure and recovery with client addresses preserved. IPv6 reload,
+persistent-session and restart behaviour remain unqualified.</p>
 <h2>Check applied state.</h2>
 <p>In an isolated Katran test, freezing a kernel map caused a backend update to return success
 while the kernel ring stayed unchanged. This artificial permanent-write failure does not establish
@@ -52,5 +55,5 @@ comparison has run yet. Virtual results will be distinguished from hardware meas
 <p>The Katran scenario does not yet qualify backend changes, failover, IPv6 or physical NICs.
 No production readiness, high availability or DDoS protection is claimed.</p>
 </main><footer>L4Load glue: Apache-2.0 · Katran: GPL-2.0 · Generated from
-<a href="https://github.com/l4load/l4load/tree/edae8c72804d7a5fa816d592a68ddc8576123da6">edae8c72804d</a></footer>
+<a href="https://github.com/l4load/l4load/tree/2457d65359b140a8a59c182cc0fc01c0367f6623">2457d65359b1</a></footer>
 </html>
