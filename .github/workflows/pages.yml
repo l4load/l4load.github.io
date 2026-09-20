@@ -1,0 +1,43 @@
+name: site
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check generated source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          sha=$(cat source.txt)
+          test ${#sha} -eq 40
+          gh api repos/l4load/l4load/commits/main --jq .sha > current.txt
+          test "$sha" = "$(cat current.txt)"
+          git clone --quiet https://github.com/l4load/l4load.git /tmp/source
+          git -C /tmp/source checkout --quiet "$sha"
+          python3 /tmp/source/scripts/build_site.py
+          cmp index.html /tmp/source/site/index.html
+      - name: Prepare site
+        run: |
+          mkdir public
+          cp index.html source.txt .nojekyll public/
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        with:
+          path: public
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
