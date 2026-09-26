@@ -19,16 +19,21 @@ footer{border-top:1px solid #31415b;margin-top:40px;padding-top:20px;font-size:1
 <p>Tools for teams that need to handle traffic without building a networking platform.</p>
 <a href="https://github.com/l4load/l4load">Source &amp; quickstart ↗</a></header>
 <main><h2>Start with a working dataplane.</h2>
-<p>Balance experiments reuse existing engines before adding new code.
-Our Katran lab sends TCP and UDP through one IPv4 VIP to two IPIP backends,
-checks replies and preserves the original client address without DPDK.</p>
+<p><a href="https://github.com/l4load/l4load/tree/main/profiles/ipvs">Balance</a>
+packages Linux IPVS and Keepalived into an installable IPv4 DSR profile with
+backend health, drain, rollback and a tested two-node virtual HA recipe.
+<a href="https://github.com/l4load/l4load/tree/main/profiles/nftables">Shield</a>
+uses nftables for source/VIP filtering and atomic policy snapshots. Both reuse
+packaged engines; neither is qualified for unrestricted production traffic.</p>
+<p>Our separate Katran lab sends TCP and UDP through one IPv4 VIP to two IPIP
+backends, checks replies and preserves the original client address without DPDK.</p>
 <p><a href="https://github.com/l4load/l4load/tree/main/lab/katran">Run the Katran scenario ↗</a> ·
 <a href="https://github.com/l4load/l4load/actions/workflows/katran.yml">Execution logs &amp; artifacts ↗</a></p>
 <p>This is a functional Linux namespace test using generic XDP and static maps.
 It is not a production deployment or a throughput result.</p>
 <div class="grid">
-<article><h3>Balance</h3><small>Katran DSR lab</small><p>Test and tune existing dataplanes.</p></article>
-<article><h3>Shield</h3><small>Planned</small><p>Traffic filtering and protection.</p></article>
+<article><h3>Balance</h3><small>IPVS profile</small><p>Healthy forwarding, controlled changes and virtual HA.</p></article>
+<article><h3>Shield</h3><small>nftables profile</small><p>Source/VIP policy with atomic snapshots.</p></article>
 <article><h3>Pulse</h3><small>Planned</small><p>Traffic and failure analysis.</p></article>
 <article><h3>Fabric</h3><small>Planned</small><p>Configuration and multi-site operation.</p></article>
 </div>
@@ -127,6 +132,15 @@ kept two TCP sockets through automatic failover and failback without reconnect.
 Each completed 235 exchanges; one exchange waited 6.578 seconds. Fresh TCP/UDP
 recovered in 3.674 seconds. The sequential client does not measure independent
 per-flow stalls. Replication loss, physical L2 and production targets remain open.</p>
+<p>The <a href="https://github.com/l4load/l4load/blob/main/lab/cutover/results/2026-09-26-installed-ha.json">installed two-node profile</a>
+passed automated failover, backend exclusion, rejected updates, drain, rollback
+and planned service handoff in virtual namespaces. Two existing TCP sockets
+survived the automatic failover without reconnect; fresh TCP/UDP recovered in
+3.690 seconds. Its separate <a href="https://github.com/l4load/l4load/blob/main/lab/cutover/results/2026-09-26-sync-loss.json">sync-loss trial</a>
+showed the limit: after the state link went down, the backup took the VIP and
+fresh TCP/UDP recovered in 3.583 seconds, but an unsynced existing TCP socket
+reset. Physical network, sustained load and an operational loss target are not
+qualified.</p>
 <p>A <a href="https://github.com/l4load/l4load/actions/runs/36177713642">bounded UDP load trial</a>
 kept about 1,000 allowed messages/s without reported loss while generators sent
 about 100,000 denied messages/s. Across three repeats, p99 RTT was 45–75 µs for
@@ -178,5 +192,5 @@ This does not qualify abrupt failure, lost sync messages or automatic failover.<
 <p>The Katran scenario does not yet qualify backend changes, failover, IPv6 or physical NICs.
 No production readiness, high availability or DDoS protection is claimed.</p>
 </main><footer>L4Load glue: Apache-2.0 · Katran: GPL-2.0 · Generated from
-<a href="https://github.com/l4load/l4load/tree/93024902fffb30e3f2a7d13bed5b36c674c4b12b">93024902fffb</a></footer>
+<a href="https://github.com/l4load/l4load/tree/cd54c83dd1e6b86ca2014b8aad868248fc9a442f">cd54c83dd1e6</a></footer>
 </html>
