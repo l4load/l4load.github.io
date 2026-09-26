@@ -191,11 +191,11 @@ restoring it returned both IPVS weights and the route. Unit restarts and a
 rejected reload also preserved verified traffic. This was one short virtual
 run, not a physical-capacity or production SLO result.</p>
 <p>With the installed nftables filters on both directors, a
-<a href="https://github.com/l4load/l4load/blob/main/lab/bgp/results/2026-09-26-attack-pair.json">separate 30-second virtual run</a>
-sent about 100,000 denied UDP messages/s while fresh TCP/UDP traffic crossed
-a forwarding fault. Each protocol had 255/265 errors during the fault and
-292/292 successes on standby. This measures one short scenario, not capacity
-or superiority over another balancer.</p>
+<a href="https://github.com/l4load/l4load/blob/main/lab/bgp/results/2026-09-26-attack-phases.json">30-second virtual run</a>
+counted 98,906–100,597 denied packets/s across the phases of a forwarding
+fault and routed failover. Each useful protocol had 259/273 errors during the
+fault and 289/289 successes on standby. Service cgroup figures exclude kernel
+dataplane CPU. This is not a capacity or comparative ranking.</p>
 <p>A <a href="https://github.com/l4load/l4load/actions/runs/36177713642">bounded UDP load trial</a>
 kept about 1,000 allowed messages/s without reported loss while generators sent
 about 100,000 denied messages/s. Across three repeats, p99 RTT was 45–75 µs for
@@ -247,5 +247,5 @@ This does not qualify abrupt failure, lost sync messages or automatic failover.<
 <p>The Katran scenario does not yet qualify backend changes, failover, IPv6 or physical NICs.
 No production readiness, high availability or DDoS protection is claimed.</p>
 </main><footer>L4Load glue: Apache-2.0 · Katran: GPL-2.0 · Generated from
-<a href="https://github.com/l4load/l4load/tree/b0d025d945e7ea29ac28dcc581c7656158a15e28">b0d025d945e7</a></footer>
+<a href="https://github.com/l4load/l4load/tree/bb577cfa16792667b1d069d5afc985fdc173f6ee">bb577cfa1679</a></footer>
 </html>
